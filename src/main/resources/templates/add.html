@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    #hde{
+      width: 500px;
+      margin: 0 auto;
+    }
+    #hde div{
+      background: yellowgreen;
+    }
+  </style>
+</head>
+<body>
+<div id="hde">
+  <h1>添加球员信息</h1>
+  <div>
+    <form action="/players/add" method="post">
+      <p>球员姓名:<input type="text" name="pname" id="pname" ></p>
+      <p>出生时间:<input type="text" name="birthday" id="birthday" >(yyyy-MM-dd)</p>
+      <p>球员身高:<input type="text" name="height" id="height"  >(单位:cm)</p>
+      <p>球员体重:<input type="text" name="weight" id="weight" >(单位:kg)</p>
+      <p>球员位置:
+        <input type="radio" name="position" value="控球后卫">控球后卫
+        <input type="radio" name="position" value="得分后卫">得分后卫
+        <input type="radio" name="position" value="小前锋">小前锋
+        <input type="radio" name="position" value="大前锋">大前锋
+        <input type="radio" name="position" value="中锋">中锋
+
+      </p>
+      <p>所属球队:
+        <select id="cid" name="cid">
+          <option value="0">---请选择---</option>
+          <option th:each="club:${clubsList}" th:value="${club.cid}" th:text="${club.cname}"></option>
+        </select>
+      </p>
+      <p>相关操作:
+        <input type="button" value="新增" onclick="add()">
+        <input type="button" value="返回">
+      </p>
+    </form>
+  </div>
+
+</div>
+<script  src="/static/js/jquery-1.12.4.js"></script>
+<script>
+  function add() {
+    var $infos=$("form").find(":input");//获取所有表单元素
+    var  arrys= $infos.serializeArray(); //将表单元素编码成 数组格式
+    var stringInfos=  $.param(arrys);  //数组序列化 成 字符串
+    $.ajax({
+      url:"/players/add",
+      data:stringInfos,
+      type:"post",
+      dataType:"text",
+      success:function(data){
+        if (data=="true") {
+          alert("成功");
+          location.href="/players/select";
+        } else {
+          alert("添加失败");
+        }
+      }
+    });
+  }
+</script>
+
+
+</body>
+</html>

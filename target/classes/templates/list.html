@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <style>
+            tr:nth-of-type(odd){
+                background: lightblue;
+            }
+        </style>
+        <script type="text/javascript">
+            function add(){
+                location.href = "/players/toAdd";
+            }
+        </script>
+    </head>
+    <body>
+        <div align="center" width="800">
+            <h1>美国职业篮球联盟(NBA)球员信息</h1>
+            <form method="post" action="/players/select">
+                <span>球员姓名：<input type="text" name="pname" id="pname"/></span>
+                所属球队:
+                <select id="cid" name="cid">
+                    <option value="0">--请选择--</option>
+                    <option th:each="clubs:${clubsList}" th:value="${clubs.cid}" th:text="${clubs.cname}"></option>
+                </select>
+                <input type="submit" value="提交">
+                <input type="button" value="添加" onclick="add()">
+            </form>
+            <br/>
+            <table width="1200" border="1">
+                <tr>
+                    <th>球员编号</th>
+                    <th>球员名称</th>
+                    <th>出生时间(yyyy-MM-dd)</th>
+                    <th>球员身高(单位:cm)</th>
+                    <th>球员体重(单位:kg)</th>
+                    <th>球员位置</th>
+                    <th>球员所属球队</th>
+                    <th>相关操作</th>
+                </tr>
+                <tr th:each="players:${playersList}">
+                    <td th:text="${players.pid}"></td>
+                    <td th:text="${players.pname}"></td>
+                    <td th:text="${#dates.format(players.birthday,'yyyy-MM-dd')}"></td>
+                    <td th:text="${players.height}"></td>
+                    <td th:text="${players.weight}"></td>
+                    <td th:text="${players.position}"></td>
+                    <td th:text="${players.cname}"></td>
+                    <th><a href="javascript:void(0)" th:onclick="|del(${player.pid})|">删除</a></th>
+                </tr>
+            </table>
+        </div>
+    <script src="/static/js/jquery-1.12.4.js"></script>
+    <script>
+        function add(){
+            location.href='/players/toAdd';
+
+        }
+        function del(id) {
+            $.ajax({
+                url:"/players/delete",
+                data:{"id":id},
+                type:"post",
+                dataType:"text",
+                success:function (data){
+                    if (data=="true"){
+                        alert("删除成功");
+                        location.href="/players/list";
+                    }else {
+                        alert("删除失败");
+                    }
+                }
+            })
+        }
+    </script>
+    </body>
+</html>

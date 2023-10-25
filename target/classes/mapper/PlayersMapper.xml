@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.mapper.PlayersMapper">
+
+    <select id="listPlayers" resultType="Players">
+        SELECT p.`pid`,p.`pname`,p.`birthday`,p.`height`,p.`weight`,p.`position`,c.`cname` FROM players p,clubs c WHERE p.`cid` = c.`cid`
+        <if test="pname!=null">
+            and pname like CONCAT('%',#{pname},'%')
+        </if>
+        <if test="cid!=null and cid != 0">
+            and p.`cid` = #{cid}
+        </if>
+        order by birthday desc
+    </select>
+
+</mapper>
